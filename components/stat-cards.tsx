@@ -12,9 +12,15 @@ import { formatCents } from "@/lib/utils/format";
 
 interface StatCardsProps {
   invoices: UnifiedInvoice[];
+  providersConnected: number;
+  totalProviders?: number;
 }
 
-export function StatCards({ invoices }: StatCardsProps) {
+export function StatCards({
+  invoices,
+  providersConnected,
+  totalProviders = 2,
+}: StatCardsProps) {
   const count = invoices.length;
   const totalCents = invoices.reduce(
     (sum, invoice) => sum + invoice.total_amount_cents,
@@ -23,28 +29,45 @@ export function StatCards({ invoices }: StatCardsProps) {
   const currency = invoices[0]?.currency ?? "USD";
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      <Card>
-        <CardHeader>
-          <CardDescription>Total invoices</CardDescription>
-          <CardTitle className="text-3xl">{count}</CardTitle>
+    <div className="grid gap-3 sm:grid-cols-3">
+      <Card className="p-4">
+        <CardHeader className="space-y-1 p-0">
+          <CardDescription className="text-xs">Total invoices</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums">
+            {count}
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            {count === 0 ? "0 invoices" : `${count} invoice${count === 1 ? "" : "s"}`}
+        <CardContent className="p-0 pt-2">
+          <p className="text-xs text-muted-foreground">
+            {count === 0 ? "No invoices loaded" : "Across active filters"}
           </p>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader>
-          <CardDescription>Combined total</CardDescription>
-          <CardTitle className="text-3xl">
+
+      <Card className="p-4">
+        <CardHeader className="space-y-1 p-0">
+          <CardDescription className="text-xs">Combined total</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums">
             {formatCents(totalCents, currency)}
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
+        <CardContent className="p-0 pt-2">
+          <p className="text-xs text-muted-foreground">
             Sum of visible invoices
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card className="p-4">
+        <CardHeader className="space-y-1 p-0">
+          <CardDescription className="text-xs">Providers connected</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums">
+            {providersConnected} of {totalProviders}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0 pt-2">
+          <p className="text-xs text-muted-foreground">
+            QuickBooks + Xero integrations
           </p>
         </CardContent>
       </Card>
